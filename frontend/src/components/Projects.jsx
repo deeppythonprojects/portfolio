@@ -104,11 +104,11 @@ const ProjectCard = ({ project, index }) => {
             <span className="font-medium text-[#281A12]">Area:</span> {project.area}
           </span>
           <button
-            onClick={handleImageTransition}
+            onClick={handleViewProject}
             className="text-[#590F05] hover:text-[#281A12] font-medium tracking-wide transition-colors duration-300 flex items-center gap-2"
           >
             View Details
-            <ExternalLink className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4" />
           </button>
         </div>
       </div>
