@@ -58,7 +58,7 @@ const Navigation = () => {
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center">
           <button
-            onClick={() => scrollToSection('hero')}
+            onClick={goHome}
             className="text-xl md:text-2xl font-['Playfair_Display'] font-semibold text-[#281A12] tracking-tight hover:text-[#590F05] transition-colors duration-500"
           >
             Riya Rathod
