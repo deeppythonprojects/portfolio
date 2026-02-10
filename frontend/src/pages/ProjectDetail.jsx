@@ -14,6 +14,9 @@ const ProjectDetail = () => {
   const project = projectsData.find((p) => p.id === parseInt(id));
 
   useEffect(() => {
+    // Scroll to top when page loads
+    window.scrollTo(0, 0);
+    
     if (!project) {
       navigate('/');
     }
