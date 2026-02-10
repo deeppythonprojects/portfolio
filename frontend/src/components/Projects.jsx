@@ -51,7 +51,7 @@ const ProjectCard = ({ project, index }) => {
       {/* Image Container */}
       <div
         className="relative h-[500px] md:h-[600px] overflow-hidden cursor-pointer"
-        onClick={handleImageTransition}
+        onClick={handleViewProject}
         onMouseEnter={handleImageTransition}
       >
         {/* Images with crossfade */}
@@ -70,10 +70,11 @@ const ProjectCard = ({ project, index }) => {
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#281A12]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
         
-        {/* Hover Icon */}
-        <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500 transform group-hover:scale-110">
-          <div className="bg-[#FDFCFC] p-3 rounded-full">
-            <ExternalLink className="w-5 h-5 text-[#281A12]" />
+        {/* Hover Text */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
+          <div className="text-center">
+            <p className="text-[#FDFCFC] text-lg mb-4 font-['Playfair_Display']">View Project</p>
+            <ArrowRight className="w-8 h-8 text-[#FDFCFC] mx-auto animate-pulse" />
           </div>
         </div>
 
