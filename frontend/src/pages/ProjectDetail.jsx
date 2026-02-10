@@ -288,7 +288,15 @@ const ProjectDetail = () => {
             Let's discuss how we can bring your vision to life.
           </p>
           <button
-            onClick={() => navigate('/#contact')}
+            onClick={() => {
+              navigate('/');
+              setTimeout(() => {
+                const element = document.getElementById('contact');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth' });
+                }
+              }, 100);
+            }}
             className="bg-[#281A12] text-[#FDFCFC] px-10 py-4 font-medium tracking-widest uppercase text-sm hover:bg-[#590F05] transition-all duration-500 inline-flex items-center gap-2"
           >
             Get In Touch
