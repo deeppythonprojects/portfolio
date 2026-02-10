@@ -27,8 +27,8 @@ const Navigation = () => {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
           isScrolled
-            ? 'bg-[#FDFCFC]/95 backdrop-blur-md shadow-sm py-4'
-            : 'bg-transparent py-6'
+            ? 'bg-[#FDFCFC]/95 backdrop-blur-md shadow-lg py-4'
+            : 'bg-[#FDFCFC]/80 backdrop-blur-sm shadow-md py-5'
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center">
@@ -40,12 +40,12 @@ const Navigation = () => {
           </button>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-2">
             {['about', 'projects', 'contact'].map((item) => (
               <button
                 key={item}
                 onClick={() => scrollToSection(item)}
-                className="text-sm tracking-widest uppercase text-[#736F6A] hover:text-[#281A12] transition-colors duration-500"
+                className="px-6 py-2 text-sm tracking-widest uppercase text-[#736F6A] hover:text-[#281A12] hover:bg-[#CBBAAE]/20 rounded-sm transition-all duration-500"
               >
                 {item}
               </button>
@@ -55,7 +55,7 @@ const Navigation = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-[#281A12] hover:text-[#590F05] transition-colors duration-300"
+            className="md:hidden bg-[#281A12] text-[#FDFCFC] hover:bg-[#590F05] transition-all duration-300 p-2 rounded"
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
