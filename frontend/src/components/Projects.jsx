@@ -7,6 +7,7 @@ const ProjectCard = ({ project, index }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const cardRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -31,6 +32,10 @@ const ProjectCard = ({ project, index }) => {
 
   const handleImageTransition = () => {
     setCurrentImageIndex((prev) => (prev + 1) % project.images.length);
+  };
+
+  const handleViewProject = () => {
+    navigate(`/project/${project.id}`);
   };
 
   return (
