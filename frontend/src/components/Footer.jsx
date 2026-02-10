@@ -51,12 +51,7 @@ const Footer = () => {
               {['About', 'Projects', 'Contact'].map((link) => (
                 <li key={link}>
                   <button
-                    onClick={() => {
-                      const element = document.getElementById(link.toLowerCase());
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }}
+                    onClick={() => scrollToSection(link)}
                     className="text-[#CBBAAE] hover:text-[#FDFCFC] transition-colors duration-300 text-sm"
                   >
                     {link}
