@@ -64,23 +64,23 @@ const Navigation = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed inset-0 bg-[#FDFCFC] z-40 transition-all duration-700 md:hidden ${
+        className={`fixed inset-0 bg-gradient-to-br from-[#CBBAAE] to-[#9F9D9B] z-40 transition-all duration-700 md:hidden ${
           isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
         }`}
       >
-        <div className="flex flex-col items-center justify-center h-full space-y-8">
+        <div className="flex flex-col items-center justify-center h-full space-y-10 px-6">
           {['about', 'projects', 'contact'].map((item, index) => (
             <button
               key={item}
               onClick={() => scrollToSection(item)}
-              className="text-3xl font-['Playfair_Display'] text-[#281A12] hover:text-[#590F05] transition-all duration-500"
+              className="text-4xl font-['Playfair_Display'] text-[#281A12] hover:text-[#FDFCFC] transition-all duration-500 border-b-2 border-transparent hover:border-[#FDFCFC] pb-2"
               style={{
                 transitionDelay: isMenuOpen ? `${index * 100}ms` : '0ms',
                 transform: isMenuOpen ? 'translateY(0)' : 'translateY(-20px)',
                 opacity: isMenuOpen ? 1 : 0,
               }}
             >
-              {item}
+              {item.charAt(0).toUpperCase() + item.slice(1)}
             </button>
           ))}
         </div>
