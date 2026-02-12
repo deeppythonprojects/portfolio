@@ -1,3 +1,4 @@
+import logo from '../assests/images/riya_logo_2.png';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
@@ -59,9 +60,12 @@ const Navigation = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center">
           <button
             onClick={goHome}
-            className="text-xl md:text-2xl font-['Playfair_Display'] font-semibold text-[#281A12] tracking-tight hover:text-[#590F05] transition-colors duration-500"
+            className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-500"
           >
-            Riya Rathod
+            
+            <span className="text-xl md:text-2xl font-['Playfair_Display'] font-semibold text-[#281A12] tracking-tight hover:text-[#590F05] transition-colors duration-500">
+              Riya Rathod
+            </span>
           </button>
 
           {/* Desktop Menu */}

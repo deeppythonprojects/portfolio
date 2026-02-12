@@ -40,14 +40,35 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate form submission (frontend only)
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 3000);
+    
+    // Submit to Formspree
+    const form = e.target;
+    const formDataToSend = new FormData(form);
+    
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: formDataToSend,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        setIsSubmitted(true);
+        setTimeout(() => {
+          setIsSubmitted(false);
+          setFormData({ name: '', email: '', subject: '', message: '' });
+        }, 3000);
+      } else {
+        alert('Failed to send message. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to send message. Please try again.');
+    }
   };
 
   return (
@@ -108,22 +129,22 @@ const Contact = () => {
                 {
                   icon: Mail,
                   label: 'Email',
-                  value: 'riya.rathod@design.com',
-                  href: 'mailto:riya.rathod@design.com',
+                  value: 'vrrathod1243@gmail.com',
+                  href: 'mailto:vrrathod1243@gmail.com',
                   delay: 900,
                 },
-                {
-                  icon: Phone,
-                  label: 'Phone',
-                  value: '+91 98765 43210',
-                  href: 'tel:+919876543210',
-                  delay: 1000,
-                },
+                // {
+                //   icon: Phone,
+                //   label: 'Phone',
+                //   value: '+1 147 299 6161',
+                //   href: 'tel:+11472996161',
+                //   delay: 1000,
+                // },
                 {
                   icon: Linkedin,
                   label: 'LinkedIn',
-                  value: 'linkedin.com/in/riyarathod',
-                  href: 'https://linkedin.com/in/riyarathod',
+                  value: 'https://www.linkedin.com/in/riya-rathod-43a68827a/',
+                  href: 'https://www.linkedin.com/in/riya-rathod-43a68827a/',
                   delay: 1100,
                 },
               ].map((contact, index) => {
@@ -192,7 +213,12 @@ const Contact = () => {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form 
+                action="https://formspree.io/f/mpqjppzw"
+                method="POST"
+                onSubmit={handleSubmit} 
+                className="space-y-6"
+              >
                 <div>
                   <label
                     htmlFor="name"

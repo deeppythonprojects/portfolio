@@ -69,23 +69,23 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li>
                 <a
-                  href="mailto:riya.rathod@design.com"
+                  href="mailto:vrrathod1243@gmail.com"
                   className="text-[#CBBAAE] hover:text-[#FDFCFC] transition-colors duration-300"
                 >
-                  riya.rathod@design.com
+                  vrrathod1243@gmail.com
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
-                  href="tel:+919876543210"
+                  href="tel:+11472996161"
                   className="text-[#CBBAAE] hover:text-[#FDFCFC] transition-colors duration-300"
                 >
-                  +91 98765 43210
+                  +1 147 299 6161
                 </a>
-              </li>
+              </li> */}
               <li>
                 <a
-                  href="https://linkedin.com/in/riyarathod"
+                  href="https://www.linkedin.com/in/riya-rathod-43a68827a/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#CBBAAE] hover:text-[#FDFCFC] transition-colors duration-300"
@@ -107,7 +107,7 @@ const Footer = () => {
             <Heart className="w-4 h-4 text-[#590F05] fill-current" />
           </p>
           <p className="text-[#9F9D9B] text-xs">
-            Interior Design Portfolio • All Rights Reserved
+            Interior Designer Portfolio • All Rights Reserved
           </p>
         </div>
       </div>

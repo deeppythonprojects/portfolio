@@ -1,3 +1,5 @@
+import portfolio_self_portrait from '../assests/images/portfolio_self.png';
+import resume from '../assests/resumes/Riya_Rathod_Resume_f.pdf';
 import React, { useEffect, useRef, useState } from 'react';
 
 const About = () => {
@@ -58,14 +60,14 @@ const About = () => {
           {/* Left: Image */}
           <div
             ref={imageRef}
-            className="relative h-[500px] md:h-[700px] overflow-hidden transition-all duration-1000"
+            className="relative h-[500px] md:h-[700px] overflow-hidden transition-all duration-1000 group cursor-pointer"
             style={{
               opacity: isVisible ? 1 : 0,
               transform: isVisible ? 'translateX(0)' : 'translateX(-100px)',
             }}
           >
             <div
-              className="absolute inset-0 transition-all duration-1000 delay-300"
+              className="absolute inset-0 transition-all duration-1000 delay-300 group-hover:scale-110"
               style={{
                 clipPath: isVisible
                   ? 'polygon(0 0, 100% 0, 100% 100%, 0 100%)'
@@ -73,13 +75,13 @@ const About = () => {
               }}
             >
               <img
-                src="https://images.unsplash.com/photo-1615406020658-6c4b805f1f30?w=800&q=80"
-                alt="Interior Design Workspace"
+                src={portfolio_self_portrait}
+                alt="Self Portfolio"
                 className="w-full h-full object-cover"
               />
             </div>
             {/* Border Frame */}
-            <div className="absolute inset-4 border border-[#FDFCFC]/30 pointer-events-none"></div>
+            <div className="absolute inset-4 border border-[#FDFCFC]/30 pointer-events-none group-hover:border-[#FDFCFC]/60 transition-all duration-500"></div>
           </div>
 
           {/* Right: Content */}
@@ -107,7 +109,7 @@ const About = () => {
             {/* Name */}
             <div className="overflow-hidden">
               <h2
-                className="font-['Playfair_Display'] text-4xl md:text-5xl lg:text-6xl font-bold text-[#281A12] leading-tight transition-transform duration-1000 delay-700"
+                className="font-['Playfair_Display'] text-4xl md:text-5xl lg:text-6xl font-bold text-[#281A12] leading-tight transition-transform duration-1000 delay-700 hover:text-[#590F05] cursor-pointer"
                 style={{
                   transform: isVisible ? 'translateY(0)' : 'translateY(50px)',
                 }}
@@ -119,7 +121,7 @@ const About = () => {
             {/* Title */}
             <div className="overflow-hidden">
               <p
-                className="text-xl md:text-2xl text-[#590F05] font-medium transition-transform duration-1000 delay-900"
+                className="text-xl md:text-2xl text-[#590F05] font-medium transition-transform duration-1000 delay-900 hover:scale-105 hover:translate-x-2 cursor-pointer inline-block origin-left"
                 style={{
                   transform: isVisible ? 'translateY(0)' : 'translateY(50px)',
                 }}
@@ -130,7 +132,7 @@ const About = () => {
 
             {/* Divider */}
             <div
-              className="w-16 h-px bg-[#736F6A] transition-all duration-1000 delay-1000"
+              className="w-16 h-px bg-[#736F6A] transition-all duration-1000 delay-1000 hover:w-32 hover:bg-[#590F05] cursor-pointer"
               style={{
                 transform: isVisible ? 'scaleX(1)' : 'scaleX(0)',
                 transformOrigin: 'left',
@@ -139,62 +141,114 @@ const About = () => {
 
             {/* Bio */}
             <div className="space-y-4">
-              <p
-                className="text-[#281A12] leading-relaxed text-base md:text-lg transition-all duration-1000 delay-1100"
-                style={{
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-                }}
-              >
-                I'm Riya Rathod, a fourth-year Interior Design student passionate about
-                creating functional and engaging corporate and retail spaces.
-              </p>
-              <p
-                className="text-[#281A12] leading-relaxed text-base md:text-lg transition-all duration-1000 delay-1200"
-                style={{
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-                }}
-              >
-                My design approach blends creativity with practicality, using 3D
-                visualisation to craft efficient, visually impactful interiors.
-              </p>
-              <p
-                className="text-[#281A12] leading-relaxed text-base md:text-lg transition-all duration-1000 delay-1300"
-                style={{
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-                }}
-              >
-                I value sustainable materials and thoughtful design that enhance user
-                experience while promoting responsible, future-focused spaces.
-              </p>
+              {[
+                "I'm Riya Rathod, a fourth-year Interior Design student passionate about creating functional and engaging corporate and retail spaces.",
+                'My design approach blends creativity with practicality, using 3D visualisation to craft efficient, visually impactful interiors.',
+                'I value sustainable materials and thoughtful design that enhance user experience while promoting responsible, future-focused spaces.',
+              ].map((text, idx) => (
+                <p
+                  key={idx}
+                  className="text-[#281A12] leading-relaxed text-base md:text-lg transition-all duration-500 hover:text-[#590F05] hover:translate-x-2"
+                  style={{
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                    transitionDelay: `${1100 + idx * 100}ms`,
+                  }}
+                >
+                  {text}
+                </p>
+              ))}
             </div>
 
             {/* Skills */}
-            <div
-              className="grid grid-cols-2 gap-4 pt-6 transition-all duration-1000 delay-1400"
-              style={{
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-              }}
-            >
-              {[
-                'Corporate Interiors',
-                'Retail Spaces',
-                '3D Visualization',
-                'Sustainable Design',
-              ].map((skill, index) => (
-                <div
-                  key={skill}
-                  className="border border-[#736F6A]/30 px-4 py-3 text-center hover:border-[#281A12] hover:bg-[#FDFCFC]/10 transition-all duration-500"
-                  style={{
-                    transitionDelay: `${1400 + index * 100}ms`,
-                  }}
-                >
-                  <p className="text-sm text-[#281A12] font-medium">{skill}</p>
+                  <div
+                    className="grid grid-cols-2 gap-4 pt-6 transition-all duration-1000 delay-1400"
+                    style={{
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                    }}
+                  >
+                    {[
+                    'Corporate Interiors',
+                    'Retail Spaces',
+                    '3D Visualization',
+                    'Sustainable Design',
+                    ].map((skill, index) => (
+                    <div
+                      key={skill}
+                      className="relative border border-[#736F6A]/30 px-4 py-3 text-center overflow-hidden transition-all duration-500 hover:border-[#281A12] hover:scale-105 hover:-translate-y-1 cursor-pointer group"
+                      style={{
+                      transitionDelay: `${1400 + index * 100}ms`,
+                      }}
+                    >
+                      {/* Swoop background */}
+                      <div className="absolute inset-0 bg-[#281A12] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+                      
+                      {/* Text */}
+                      <p className="relative text-sm text-[#281A12] font-medium group-hover:text-[#FDFCFC] transition-colors duration-500">
+                      {skill}
+                      </p>
+                    </div>
+                    ))}
+                  </div>
+                  </div>
+                  {/* Education & Skills Section */}
+          <div className="md:col-span-2 pt-12 border-t border-[#736F6A]/20">
+            <div className="grid md:grid-cols-2 gap-12">
+              {/* Education */}
+              <div
+                className="group hover:bg-[#FDFCFC]/10 p-6 rounded transition-all duration-500"
+                style={{
+                  opacity: isVisible ? 1 : 0,
+                  transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                  transition: 'all 1s cubic-bezier(0.4, 0, 0.2, 1) 1.5s',
+                }}
+              >
+                <h3 className="font-['Playfair_Display'] text-2xl font-bold text-[#281A12] mb-6 group-hover:text-[#590F05] transition-colors duration-500">
+                  Education
+                </h3>
+                <div className="space-y-6">
+                  <div className="group-hover:translate-x-2 transition-transform duration-500">
+                    <p className="text-[#590F05] font-semibold text-lg">Bachelor of Interior Design</p>
+                    <p className="text-[#736F6A] text-sm mt-1">2022-2026</p>
+                    <p className="text-[#281A12] text-base mt-2">
+                      <b>Yorkville University, Toronto, ON</b>
+                      <br />
+                      Interests: Space Planning & Layout, Client-Centered Design Approach, Materials & Finishes Selection, 2D Drafting & 3D Modeling, Presentation Boards & Mood boards & Team Collaboration
+                    </p>
+                  </div>
                 </div>
-              ))}
+              </div>
+
+              {/* Technical Skills */}
+              <div
+                className="group hover:bg-[#FDFCFC]/10 p-6 rounded transition-all duration-500"
+                style={{
+                  opacity: isVisible ? 1 : 0,
+                  transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                  transition: 'all 1s cubic-bezier(0.4, 0, 0.2, 1) 1.6s',
+                }}
+              >
+                <h3 className="font-['Playfair_Display'] text-2xl font-bold text-[#281A12] mb-6 group-hover:text-[#590F05] transition-colors duration-500">
+                  Technical Skills
+                </h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {['AutoCAD', 'SketchUp', 'Twinmotion', 'Revit', 'Adobe Suite', 'V-Ray & D5 Rendering'].map((tech) => (
+                    <div key={tech} className="bg-[#FDFCFC]/20 px-3 py-2 rounded border border-[#736F6A]/20 hover:bg-[#590F05]/10 hover:border-[#590F05] hover:scale-110 transition-all duration-300 cursor-pointer">
+                      <p className="text-[#281A12] text-sm font-medium">{tech}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-6 pt-6 border-t border-[#736F6A]/20">
+                  <a
+                    href={resume}
+                    download
+                    className="inline-flex items-center px-6 py-3 bg-[#281A12] text-[#FDFCFC] font-medium rounded hover:bg-[#590F05] transition-all duration-300 hover:scale-105 cursor-pointer"
+                  >
+                    Download Resume
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>

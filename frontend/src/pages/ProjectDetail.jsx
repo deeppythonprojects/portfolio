@@ -1,311 +1,554 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, Ruler } from 'lucide-react';
 import { projectsData } from '../data/projects';
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
+import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 
 const ProjectDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const imageRefs = useRef([]);
-  
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   const project = projectsData.find((p) => p.id === parseInt(id));
 
   useEffect(() => {
-    // Scroll to top when page loads
     window.scrollTo(0, 0);
-    
-    if (!project) {
-      navigate('/');
-    }
-  }, [project, navigate]);
+  }, [id]);
 
+  // Auto-carousel every 5 seconds
   useEffect(() => {
-    const handleScroll = () => {
-      imageRefs.current.forEach((ref, index) => {
-        if (!ref) return;
-        
-        const rect = ref.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-        const elementCenter = rect.top + rect.height / 2;
-        const windowCenter = windowHeight / 2;
-        
-        // Calculate distance from center
-        const distanceFromCenter = Math.abs(elementCenter - windowCenter);
-        const maxDistance = windowHeight / 2;
-        
-        // Calculate scale based on distance (closer to center = larger)
-        const scale = Math.max(0.85, 1 - (distanceFromCenter / maxDistance) * 0.3);
-        const opacity = Math.max(0.6, 1 - (distanceFromCenter / maxDistance) * 0.4);
-        
-        ref.style.transform = `scale(${scale})`;
-        ref.style.opacity = opacity;
-        
-        // Track active image
-        if (distanceFromCenter < 200) {
-          setActiveImageIndex(index);
-        }
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial call
+    if (!project || !project.images.renders || project.images.renders.length === 0) return;
     
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    const galleryImages = [project.images.main, ...project.images.renders];
+    if (galleryImages.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => 
+        prev === galleryImages.length - 1 ? 0 : prev + 1
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [project]);
 
   if (!project) {
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FDFCFC]">
+        <div className="text-center">
+          <h2 className="font-['Playfair_Display'] text-3xl text-[#281A12] mb-4">
+            Project not found
+          </h2>
+          <button
+            onClick={() => navigate('/')}
+            className="text-[#590F05] hover:text-[#281A12] font-medium"
+          >
+            Return to Home
+          </button>
+        </div>
+      </div>
+    );
   }
+
+  // Combine main and renders for the gallery slider
+  const galleryImages = [project.images.main, ...project.images.renders];
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? galleryImages.length - 1 : prev - 1
+    );
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === galleryImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  // Get current and next project for navigation
+  const currentIndex = projectsData.findIndex((p) => p.id === project.id);
+  const nextProject = projectsData[(currentIndex + 1) % projectsData.length];
+  const prevProject =
+    projectsData[
+      currentIndex === 0 ? projectsData.length - 1 : currentIndex - 1
+    ];
+
+  // Determine layout direction based on number of floor plans
+  const layoutCount = project.images.layouts?.length || 0;
+  const lastLayoutOnLeft = layoutCount % 2 === 0;
+
+  // Helper function to get floor-specific layout items
+  const getFloorLayout = (floorIndex) => {
+    if (!project.layout) return [];
+    
+    const floorHeaders = project.layout
+      .map((item, idx) => ({ item, idx }))
+      .filter(({ item }) => 
+        item.includes('Floor') || 
+        item.includes('Basement') || 
+        item.includes('Ground')
+      );
+
+    if (floorHeaders.length === 0) return project.layout;
+
+    const startIdx = floorHeaders[floorIndex]?.idx;
+    const endIdx = floorHeaders[floorIndex + 1]?.idx || project.layout.length;
+
+    if (startIdx === undefined) return [];
+
+    return project.layout.slice(startIdx, endIdx);
+  };
 
   return (
     <div className="min-h-screen bg-[#FDFCFC]">
-      <Navigation />
-      
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-6 lg:px-12 bg-gradient-to-b from-[#CBBAAE]/20 to-[#FDFCFC]">
-        <div className="max-w-7xl mx-auto">
+      {/* Back Button - Sticky Header */}
+      <div className="sticky top-0 z-50 bg-[#FDFCFC]/95 backdrop-blur-sm border-b border-[#CBBAAE]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6">
           <button
             onClick={() => navigate('/')}
-            className="group flex items-center gap-2 text-[#736F6A] hover:text-[#281A12] transition-colors duration-300 mb-8"
+            className="flex items-center gap-2 text-[#590F05] hover:text-[#281A12] transition-colors duration-300"
           >
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
-            <span className="text-sm tracking-wide uppercase">Back to Portfolio</span>
+            <ArrowLeft className="w-5 h-5" />
+            <span className="font-medium">Back to Home</span>
           </button>
+        </div>
+      </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      {/* Hero Section - Split with Main Image */}
+      <section className="bg-[#FDFCFC]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12 md:py-16">
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-12">
             {/* Left: Project Info */}
             <div>
-              <div className="inline-block bg-[#281A12] text-[#FDFCFC] px-4 py-2 text-xs tracking-widest uppercase mb-6">
+              <span className="inline-block bg-[#CBBAAE] text-[#281A12] px-4 py-2 text-xs tracking-widest uppercase font-medium mb-4">
                 {project.category}
-              </div>
-              
-              <h1 className="font-['Playfair_Display'] text-5xl md:text-6xl lg:text-7xl font-bold text-[#281A12] mb-6 leading-tight">
+              </span>
+              <h1 className="font-['Playfair_Display'] text-4xl md:text-6xl lg:text-7xl font-bold text-[#281A12] mb-4">
                 {project.title}
               </h1>
-              
-              <p className="text-[#736F6A] text-lg leading-relaxed mb-8">
-                {project.description}
+              <div className="flex flex-wrap gap-6 text-sm text-[#736F6A] mb-4">
+                <div>
+                  <span className="font-medium text-[#281A12]">Year:</span>{' '}
+                  {project.year}
+                </div>
+                <div>
+                  <span className="font-medium text-[#281A12]">Area:</span>{' '}
+                  {project.area}
+                </div>
+              </div>
+              <p className="text-lg text-[#736F6A] leading-relaxed text-justify">
+                {project.detailedDescription.overview}
               </p>
+            </div>
 
-              <div className="flex flex-wrap gap-6">
-                <div className="flex items-center gap-3">
-                  <Calendar className="w-5 h-5 text-[#590F05]" />
-                  <div>
-                    <p className="text-xs text-[#9F9D9B] uppercase tracking-wide">Year</p>
-                    <p className="text-[#281A12] font-medium">{project.year}</p>
+            {/* Right: Main Image */}
+                  <div className="relative h-[400px] md:h-[500px]">
+                    {/* Offset Square Background */}
+                    <div className="absolute inset-0 bg-[#736F6A] rounded-lg transform translate-x-4 translate-y-4"></div>
+                    
+                    {/* Main Image */}
+                    <div className="relative h-full overflow-hidden rounded-lg">
+                    <img
+                      src={project.images.main}
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#281A12]/20 to-transparent"></div>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Ruler className="w-5 h-5 text-[#590F05]" />
-                  <div>
-                    <p className="text-xs text-[#9F9D9B] uppercase tracking-wide">Area</p>
-                    <p className="text-[#281A12] font-medium">{project.area}</p>
                   </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Right: Featured Image */}
-            <div className="relative h-[500px] overflow-hidden">
-              <img
-                src={project.images[0]}
-                alt={project.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#281A12]/30 to-transparent"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Detailed Description Section */}
-      <section className="py-20 px-6 lg:px-12 bg-[#FDFCFC]">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="font-['Playfair_Display'] text-3xl md:text-4xl font-bold text-[#281A12] mb-8">
-            Project Overview
-          </h2>
-          
-          <div className="space-y-6 text-[#736F6A] leading-relaxed">
-            <p>
-              {project.detailedDescription?.overview || 
-              `This ${project.category.toLowerCase()} project represents a careful balance between 
-              aesthetics and functionality. Every design decision was made with the end-user experience 
-              in mind, creating spaces that not only look beautiful but also enhance daily operations 
-              and interactions.`}
-            </p>
-            
-            <p>
-              {project.detailedDescription?.challenge || 
-              `The challenge was to create an environment that reflects modern design sensibilities 
-              while maintaining practicality and sustainability. Through careful material selection 
-              and spatial planning, we achieved a harmonious blend of form and function.`}
-            </p>
-            
-            <p>
-              {project.detailedDescription?.solution || 
-              `Our solution incorporated sustainable materials, strategic lighting, and flexible 
-              layouts that can adapt to changing needs. The result is a space that feels both 
-              timeless and contemporary, serving its purpose while inspiring those who use it.`}
-            </p>
-          </div>
-
-          {/* Key Features */}
-          <div className="mt-12 grid md:grid-cols-2 gap-6">
-            {(project.features || [
-              'Sustainable materials',
-              'Natural lighting optimization',
-              'Flexible spatial design',
-              'Modern aesthetic',
-              'User-centric approach',
-              'Efficient space utilization'
-            ]).map((feature, index) => (
-              <div 
-                key={index}
-                className="flex items-start gap-3 p-4 border-l-2 border-[#CBBAAE] bg-[#CBBAAE]/10 hover:border-[#590F05] transition-colors duration-300"
-              >
-                <div className="w-2 h-2 bg-[#590F05] rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-[#281A12]">{feature}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Scrolling Image Gallery with Scale Animation */}
-      <section className="py-20 bg-[#CBBAAE]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="grid lg:grid-cols-5 gap-12 items-start">
-            {/* Left: Sticky Title */}
-            <div className="lg:col-span-2 lg:sticky lg:top-32">
-              <h2 className="font-['Playfair_Display'] text-4xl md:text-5xl font-bold text-[#281A12] mb-6">
-                Visual Journey
-              </h2>
-              <p className="text-[#736F6A] leading-relaxed mb-8">
-                Explore the intricate details and thoughtful design elements that bring this 
-                space to life. Each image tells a story of craftsmanship and intentional design.
-              </p>
-              
-              {/* Image counter */}
-              <div className="flex items-center gap-4">
-                <div className="text-3xl font-['Playfair_Display'] font-bold text-[#281A12]">
-                  {String(activeImageIndex + 1).padStart(2, '0')}
-                </div>
-                <div className="flex-1 h-px bg-[#736F6A]"></div>
-                <div className="text-sm text-[#736F6A]">
-                  {String(project.images.length).padStart(2, '0')}
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Scrolling Images */}
-            <div className="lg:col-span-3 space-y-24">
-              {project.images.map((image, index) => (
-                <div
-                  key={index}
-                  ref={(el) => (imageRefs.current[index] = el)}
-                  className="relative h-[400px] md:h-[500px] overflow-hidden transition-all duration-500 ease-out origin-center"
+                  {/* Renders Image Slider - Full Width Below Hero */}
+          {project.images.renders && project.images.renders.length > 0 && (
+            <div className="relative h-[450px] md:h-[650px] bg-gray-100 overflow-hidden group">
+              {galleryImages.map((img, idx) => (
+                <img
+                  key={idx}
+                  src={img}
+                  alt={`${project.title} - View ${idx + 1}`}
+                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out"
                   style={{
-                    transform: 'scale(0.85)',
-                    opacity: 0.6,
+                    opacity: idx === currentImageIndex ? 1 : 0,
+                    zIndex: idx === currentImageIndex ? 1 : 0,
                   }}
+                />
+              ))}
+
+              {/* Navigation Arrows */}
+              {galleryImages.length > 1 && (
+                <>
+                  <button
+                    onClick={handlePrevImage}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/95 hover:bg-white p-3 rounded-full transition-all duration-300 shadow-lg md:opacity-0 md:group-hover:opacity-100"
+                    aria-label="Previous image"
+                  >
+                    <ArrowLeft className="w-5 h-5 text-[#281A12]" />
+                  </button>
+                  <button
+                    onClick={handleNextImage}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/95 hover:bg-white p-3 rounded-full transition-all duration-300 shadow-lg md:opacity-0 md:group-hover:opacity-100"
+                    aria-label="Next image"
+                  >
+                    <ArrowRight className="w-5 h-5 text-[#281A12]" />
+                  </button>
+
+                  {/* Image Counter */}
+                  <div className="absolute bottom-6 right-6 z-20 bg-[#281A12]/90 text-[#FDFCFC] px-5 py-2 rounded-full text-sm font-medium">
+                    {currentImageIndex + 1} / {galleryImages.length}
+                  </div>
+
+                  {/* Dot Indicators */}
+                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                    {galleryImages.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentImageIndex(idx)}
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                          idx === currentImageIndex
+                            ? 'bg-white w-8'
+                            : 'bg-white/50 hover:bg-white/75'
+                        }`}
+                        aria-label={`Go to image ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Overview Section
+      {project.detailedDescription?.overview && (
+        <section className="bg-[#F5F3F0] py-12 md:py-16">
+          <div className="max-w-5xl mx-auto px-6 lg:px-12">
+            <p className="text-sm tracking-[0.3em] uppercase text-[#736F6A] mb-4">
+              Overview
+            </p>
+            <p className="text-xl md:text-2xl text-[#281A12] leading-relaxed font-light text-justify">
+              {project.detailedDescription.overview}
+            </p>
+          </div>
+        </section>
+      )} */}
+
+      {/* Floor Plans Section - Split Screen with Floor-Specific Layouts */}
+      {project.images.layouts && project.images.layouts.length > 0 && (
+        <section className="bg-[#FDFCFC]">
+          <div className="max-w-7xl mx-auto">
+            {project.images.layouts.map((layout, idx) => {
+              const isLastLayout = idx === project.images.layouts.length - 1;
+              const imageOnLeft = idx % 2 === 0;
+              const floorLayout = getFloorLayout(idx);
+              
+              return (
+                <div
+                  key={idx}
+                  className="grid lg:grid-cols-2 min-h-[550px]"
                 >
-                  <img
-                    src={image}
-                    alt={`${project.title} - Detail ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#281A12]/80 to-transparent p-6">
-                    <p className="text-[#FDFCFC] text-sm tracking-wide">
-                      Image {index + 1} of {project.images.length}
+                  {/* Image Side */}
+                  <div
+                    className={`relative bg-white p-8 lg:p-12 flex items-center justify-center ${
+                      imageOnLeft ? 'lg:order-1' : 'lg:order-2'
+                    }`}
+                  >
+                    <img
+                      src={layout}
+                      alt={`${project.title} - Layout ${idx + 1}`}
+                      className="w-full h-auto object-contain max-h-[480px]"
+                    />
+                  </div>
+
+                  {/* Text Side with Floor-Specific Layout */}
+                  <div
+                    className={`bg-[#281A12] p-8 lg:p-12 flex flex-col justify-center ${
+                      imageOnLeft ? 'lg:order-2' : 'lg:order-1'
+                    }`}
+                  >
+                    <p className="text-sm tracking-[0.3em] uppercase text-[#CBBAAE] mb-3">
+                      Planning
+                    </p>
+                    <h2 className="font-['Playfair_Display'] text-3xl md:text-4xl font-bold text-[#FDFCFC] mb-4">
+                      {floorLayout[0] || 'Floor Plan'}
+                    </h2>
+                    <p className="text-[#E8E6E3] leading-relaxed mb-6 text-justify">
+                      Detailed spatial organization showcasing the thoughtful arrangement of each area within the {project.area} facility.
+                    </p>
+
+                    {/* Floor-Specific Space Designation - 2 Columns */}
+                    {floorLayout.length > 1 && (
+                      <div className="border-t border-[#CBBAAE]/30 pt-6 mt-2">
+                        <h3 className="font-['Playfair_Display'] text-lg font-semibold text-[#CBBAAE] mb-4">
+                          Space Designation
+                        </h3>
+                        <div className="grid grid-cols-2 gap-x-8 gap-y-1">
+                          {floorLayout.slice(1).map((item, itemIdx) => (
+                            item !== '' && (
+                              <p
+                                key={itemIdx}
+                                className="text-[#E8E6E3] text-xs leading-relaxed"
+                              >
+                                {item}
+                              </p>
+                            )
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Mood Board Section - Split Screen with Proper Symmetry */}
+      {project.images.mood && (
+        <section className="bg-[#F5F3F0]">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid lg:grid-cols-2 min-h-[550px]">
+              {/* Image Side - Position based on floor plan count for symmetry */}
+              <div
+                className={`relative bg-white p-8 lg:p-12 flex items-center justify-center ${
+                  lastLayoutOnLeft ? 'lg:order-2' : 'lg:order-1'
+                }`}
+              >
+                <img
+                  src={project.images.mood}
+                  alt={`${project.title} - Mood Board`}
+                  className="w-full h-auto object-contain max-h-[500px] shadow-xl"
+                />
+              </div>
+
+              {/* Text Side */}
+              <div
+                className={`bg-gradient-to-br from-[#CBBAAE] to-[#9F9D9B] p-8 lg:p-12 flex flex-col justify-center ${
+                  lastLayoutOnLeft ? 'lg:order-2' : 'lg:order-1'
+                }`}
+              >
+                <p className="text-sm tracking-[0.3em] uppercase text-[#281A12]/80 mb-3">
+                  Concept
+                </p>
+                <h2 className="font-['Playfair_Display'] text-3xl md:text-4xl font-bold text-[#281A12] mb-6">
+                  Design Mood
+                </h2>
+                <blockquote className="text-xl md:text-2xl text-[#281A12] leading-relaxed italic font-light border-l-4 border-[#281A12] pl-6 mb-8 text-justify">
+                  {project.description}
+                </blockquote>
+                
+                <div className="pt-6 border-t border-[#281A12]/20">
+                  <p className="text-sm text-[#281A12]/70 leading-relaxed text-justify">
+                    The design mood encapsulates the emotional and aesthetic qualities we sought to create—a harmonious blend of form, function, and feeling that defines the essence of this space.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Elevations Section - Split Screen Layout */}
+      {project.images.elevations && project.images.elevations.length > 0 && (
+        <section className="bg-[#FDFCFC]">
+          <div className="max-w-7xl mx-auto">
+            {project.images.elevations.map((elevation, idx) => {
+              const imageOnLeft = idx % 2 === 1;
+              
+              return (
+                <div
+                  key={idx}
+                  className="grid lg:grid-cols-2 min-h-[500px]"
+                >
+                  {/* Image Side */}
+                  <div
+                    className={`relative bg-white p-8 lg:p-12 flex items-center justify-center ${
+                      imageOnLeft ? 'lg:order-1' : 'lg:order-2'
+                    }`}
+                  >
+                    <img
+                      src={elevation}
+                      alt={`${project.title} - Elevation ${idx + 1}`}
+                      className="w-full h-auto object-contain max-h-[420px]"
+                    />
+                  </div>
+
+                  {/* Text Side */}
+                  <div
+                    className={`bg-[#F5F3F0] p-8 lg:p-12 flex flex-col justify-center ${
+                      imageOnLeft ? 'lg:order-2' : 'lg:order-1'
+                    }`}
+                  >
+                    <p className="text-sm tracking-[0.3em] uppercase text-[#736F6A] mb-3">
+                      Architecture {project.images.elevations.length > 1 ? `${idx + 1}` : ''}
+                    </p>
+                    <h2 className="font-['Playfair_Display'] text-3xl md:text-4xl font-bold text-[#281A12] mb-4">
+                      Elevation View
+                    </h2>
+                    <p className="text-[#736F6A] leading-relaxed text-lg mb-6 text-justify">
+                      Exterior perspectives showcasing the architectural character and form of the building, revealing the thoughtful composition of volumes, materials, and proportions.
+                    </p>
+                    
+                    <div className="pt-6 border-t border-[#CBBAAE]">
+                      <div className="grid grid-cols-2 gap-6">
+                        <div>
+                          <p className="text-xs uppercase tracking-wide text-[#9F9D9B] mb-2">Orientation</p>
+                          <p className="text-[#281A12] font-medium">
+                            {idx === 0 ? 'North' : idx === 1 ? 'South' : idx === 2 ? 'East' : idx === 3 ? 'West' : `View ${idx + 1}`}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs uppercase tracking-wide text-[#9F9D9B] mb-2">Drawing Scale</p>
+                          <p className="text-[#281A12] font-medium">1:100</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Assembly Section - Split Screen */}
+      {project.images.assembly && (
+        <section className="bg-[#F5F3F0]">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid lg:grid-cols-2 min-h-[550px]">
+              {/* Image Side */}
+              <div className="relative bg-white p-8 lg:p-12 flex items-center justify-center lg:order-1">
+                <img
+                  src={project.images.assembly}
+                  alt={`${project.title} - Assembly`}
+                  className="w-full h-auto object-contain max-h-[500px]"
+                />
+              </div>
+
+              {/* Text Side */}
+              <div className="bg-[#281A12] p-8 lg:p-12 flex flex-col justify-center lg:order-2">
+                <p className="text-sm tracking-[0.3em] uppercase text-[#CBBAAE] mb-3">
+                  Technical
+                </p>
+                <h2 className="font-['Playfair_Display'] text-3xl md:text-4xl font-bold text-[#FDFCFC] mb-4">
+                  Assembly View
+                </h2>
+                <p className="text-[#E8E6E3] leading-relaxed text-lg mb-6 text-justify">
+                  Exploded axonometric view illustrating the spatial relationships and construction assembly, revealing how components integrate to form the complete design.
+                </p>
+                
+                <div className="border-t border-[#CBBAAE]/30 pt-6">
+                  <h3 className="text-[#CBBAAE] text-sm tracking-widest uppercase mb-4">
+                    Technical Highlights
+                  </h3>
+                  <div className="space-y-2 text-[#E8E6E3] text-sm">
+                    <p className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-[#CBBAAE] rounded-full"></span>
+                      Structural system integration
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-[#CBBAAE] rounded-full"></span>
+                      Material composition breakdown
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-[#CBBAAE] rounded-full"></span>
+                      Spatial layer relationships
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-[#CBBAAE] rounded-full"></span>
+                      Construction sequence visualization
                     </p>
                   </div>
                 </div>
-              ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Design Process Section - Redesigned */}
+      {project.detailedDescription && (
+        <section className="bg-[#FDFCFC] py-12 md:py-16">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            <div className="text-center mb-10">
+              <p className="text-sm tracking-[0.3em] uppercase text-[#736F6A] mb-3">
+                Methodology
+              </p>
+              <h2 className="font-['Playfair_Display'] text-3xl md:text-4xl font-bold text-[#281A12]">
+                Design Process
+              </h2>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 mb-10">
+              {/* Challenge */}
+              <div className="bg-[#F5F3F0] p-8 border-l-4 border-[#590F05] hover:shadow-lg transition-shadow duration-300">
+                <h3 className="text-[#590F05] text-sm tracking-widest uppercase mb-4 font-semibold flex items-center gap-2">
+                  <span className="w-8 h-8 bg-[#590F05] text-white rounded-full flex items-center justify-center text-xs">
+                    01
+                  </span>
+                  Challenge
+                </h3>
+                <p className="text-[#736F6A] leading-relaxed text-justify">
+                  {project.detailedDescription.challenge}
+                </p>
+              </div>
+
+              {/* Solution */}
+              <div className="bg-[#F5F3F0] p-8 border-l-4 border-[#281A12] hover:shadow-lg transition-shadow duration-300">
+                <h3 className="text-[#281A12] text-sm tracking-widest uppercase mb-4 font-semibold flex items-center gap-2">
+                  <span className="w-8 h-8 bg-[#281A12] text-white rounded-full flex items-center justify-center text-xs">
+                    02
+                  </span>
+                  Solution
+                </h3>
+                <p className="text-[#736F6A] leading-relaxed text-justify">
+                  {project.detailedDescription.solution}
+                </p>
+              </div>
+            </div>
+
+            
+          </div>
+        </section>
+      )}
+
+      {/* Project Navigation */}
+      <section className="bg-[#F5F3F0] py-10 md:py-12">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="border-t border-[#CBBAAE] pt-10">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+              <button
+                onClick={() => navigate(`/project/${prevProject.id}`)}
+                className="group flex items-center gap-3 text-[#736F6A] hover:text-[#590F05] transition-colors duration-300"
+              >
+                <ArrowLeft className="w-5 h-5 flex-shrink-0 group-hover:-translate-x-1 transition-transform duration-300" />
+                <div className="text-left">
+                  <p className="text-xs uppercase tracking-widest mb-1 text-[#9F9D9B]">
+                    Previous
+                  </p>
+                  <p className="font-['Playfair_Display'] text-lg md:text-xl font-semibold">
+                    {prevProject.title}
+                  </p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => navigate(`/project/${nextProject.id}`)}
+                className="group flex items-center gap-3 text-[#736F6A] hover:text-[#590F05] transition-colors duration-300 md:ml-auto"
+              >
+                <div className="text-right">
+                  <p className="text-xs uppercase tracking-widest mb-1 text-[#9F9D9B]">
+                    Next
+                  </p>
+                  <p className="font-['Playfair_Display'] text-lg md:text-xl font-semibold">
+                    {nextProject.title}
+                  </p>
+                </div>
+                <ArrowRight className="w-5 h-5 flex-shrink-0 group-hover:translate-x-1 transition-transform duration-300" />
+              </button>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Design Process */}
-      <section className="py-20 px-6 lg:px-12 bg-[#FDFCFC]">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="font-['Playfair_Display'] text-3xl md:text-4xl font-bold text-[#281A12] mb-12 text-center">
-            Design Process
-          </h2>
-          
-          <div className="space-y-8">
-            {[
-              {
-                step: '01',
-                title: 'Research & Discovery',
-                description: 'Understanding client needs, space requirements, and contextual factors.'
-              },
-              {
-                step: '02',
-                title: 'Concept Development',
-                description: 'Creating initial concepts through sketches, mood boards, and 3D visualizations.'
-              },
-              {
-                step: '03',
-                title: 'Design Refinement',
-                description: 'Iterating on chosen concepts with detailed plans and material selections.'
-              },
-              {
-                step: '04',
-                title: 'Implementation',
-                description: 'Bringing the design to life with careful attention to every detail.'
-              }
-            ].map((phase, index) => (
-              <div key={index} className="flex gap-6 group">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-[#CBBAAE] group-hover:bg-[#281A12] transition-colors duration-500 flex items-center justify-center">
-                    <span className="font-['Playfair_Display'] text-xl font-bold text-[#281A12] group-hover:text-[#FDFCFC] transition-colors duration-500">
-                      {phase.step}
-                    </span>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-[#281A12] mb-2">{phase.title}</h3>
-                  <p className="text-[#736F6A] leading-relaxed">{phase.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-6 lg:px-12 bg-gradient-to-r from-[#CBBAAE] to-[#9F9D9B]">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="font-['Playfair_Display'] text-3xl md:text-4xl font-bold text-[#281A12] mb-6">
-            Let's Create Your Space
-          </h2>
-          <p className="text-[#736F6A] text-lg mb-8 max-w-2xl mx-auto">
-            Interested in collaborating on your next interior design project? 
-            Let's discuss how we can bring your vision to life.
-          </p>
-          <button
-            onClick={() => {
-              navigate('/');
-              setTimeout(() => {
-                const element = document.getElementById('contact');
-                if (element) {
-                  element.scrollIntoView({ behavior: 'smooth' });
-                }
-              }, 100);
-            }}
-            className="bg-[#281A12] text-[#FDFCFC] px-10 py-4 font-medium tracking-widest uppercase text-sm hover:bg-[#590F05] transition-all duration-500 inline-flex items-center gap-2"
-          >
-            Get In Touch
-            <ArrowLeft className="w-4 h-4 rotate-180" />
-          </button>
-        </div>
-      </section>
-
-      <Footer />
     </div>
   );
 };

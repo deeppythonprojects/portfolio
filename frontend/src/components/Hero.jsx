@@ -1,3 +1,4 @@
+import logo from '../assests/images/riya_logo_1.png';
 import React, { useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
@@ -46,36 +47,36 @@ const Hero = () => {
           />
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#281A12]/20 to-[#281A12]/60"></div>
-          {/* Film Grain Texture */}
-          <div className="absolute inset-0 opacity-[0.03] mix-blend-multiply"
+            {/* Film Grain Texture */}
+            <div className="absolute inset-0 opacity-[0.03] mix-blend-multiply"
             style={{
               backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="3.5" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E")',
               backgroundRepeat: 'repeat',
             }}
-          ></div>
-        </div>
-      </div>
+            ></div>
+          </div>
+          </div>
 
-      {/* Hero Content */}
+          {/* Hero Content */}}
       <div ref={textRef} className="relative z-10 h-full flex flex-col items-center justify-center px-6 text-center">
         <div className="max-w-5xl">
           {/* Animated Title */}
-          <h1 className="font-['Playfair_Display'] text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight">
-            {['Crafting', 'Spaces', 'That', 'Inspire'].map((word, index) => (
-              <span
-                key={word}
-                className="inline-block opacity-0 animate-fade-in-up"
-                style={{
-                  animationDelay: `${0.5 + index * 0.2}s`,
-                  animationFillMode: 'forwards',
-                }}
-              >
-                {word}{' '}
-              </span>
-            ))}
-          </h1>
+                <h1 className="font-['Playfair_Display'] text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight">
+                {['Crafting', 'Spaces', 'That', 'Inspire'].map((word, index) => (
+                  <span
+                  key={word}
+                  className="inline-block opacity-0 animate-fade-in-up mr-4"
+                  style={{
+                    animationDelay: `${0.5 + index * 0.2}s`,
+                    animationFillMode: 'forwards',
+                  }}
+                  >
+                  {word}
+                  </span>
+                ))}
+                </h1>
 
-          {/* Subtitle */}
+                {/* Subtitle */}
           <p
             className="text-[#CBBAAE] text-lg md:text-xl tracking-wide mb-8 opacity-0 animate-fade-in"
             style={{
@@ -85,7 +86,9 @@ const Hero = () => {
           >
             Interior Design Portfolio
           </p>
-
+          <div className="mb-12 opacity-0 animate-fade-in" style={{ animationDelay: '1.8s', animationFillMode: 'forwards' }}>
+            <img src={logo} alt="Interior Design" className="w-32 h-32 rounded-lg object-cover mx-auto shadow-lg" />
+          </div>
           {/* Decorative Line */}
           <div
             className="w-24 h-px bg-[#CBBAAE] mx-auto mb-12 transform scale-x-0 animate-scale-x"

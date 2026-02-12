@@ -1,13 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { projectsData } from '../data/projects';
-import { ExternalLink, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const ProjectCard = ({ project, index }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const cardRef = useRef(null);
   const navigate = useNavigate();
+
+  // Combine main and renders for the scrollable gallery
+  const galleryImages = [project.images.main, ...project.images.renders];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -31,7 +34,7 @@ const ProjectCard = ({ project, index }) => {
   }, []);
 
   const handleImageTransition = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % project.images.length);
+    setCurrentImageIndex((prev) => (prev + 1) % galleryImages.length);
   };
 
   const handleViewProject = () => {
@@ -55,7 +58,7 @@ const ProjectCard = ({ project, index }) => {
         onMouseEnter={handleImageTransition}
       >
         {/* Images with crossfade */}
-        {project.images.map((img, idx) => (
+        {galleryImages.map((img, idx) => (
           <img
             key={idx}
             src={img}
@@ -142,6 +145,9 @@ const Projects = () => {
     };
   }, []);
 
+  // Get unique categories from projectsData
+  const categories = ['All', ...new Set(projectsData.map(p => p.category))];
+
   const filteredProjects =
     filter === 'All'
       ? projectsData
@@ -186,7 +192,7 @@ const Projects = () => {
               transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
             }}
           >
-            {['All', 'Corporate', 'Retail'].map((category) => (
+            {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setFilter(category)}
