@@ -57,7 +57,7 @@ const Hero = () => {
           </div>
           </div>
 
-          {/* Hero Content */}}
+          {/* Hero Content */}
       <div ref={textRef} className="relative z-10 h-full flex flex-col items-center justify-center px-6 text-center">
         <div className="max-w-5xl">
           {/* Animated Title */}
