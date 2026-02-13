@@ -1,4 +1,4 @@
-import logo from '../assests/images/riya_logo_1.png';
+import logo from '../assests/images/riya_logo_1.webp';
 import React, { useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 

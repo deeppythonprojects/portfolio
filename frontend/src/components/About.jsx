@@ -1,4 +1,4 @@
-import portfolio_self_portrait from '../assests/images/portfolio_self.png';
+import portfolio_self_portrait from '../assests/images/portfolio_self.webp';
 import resume from '../assests/resumes/Riya_Rathod_Resume_f.pdf';
 import React, { useEffect, useRef, useState } from 'react';
 

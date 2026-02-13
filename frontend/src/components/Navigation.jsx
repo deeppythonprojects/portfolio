@@ -1,4 +1,4 @@
-import logo from '../assests/images/riya_logo_2.png';
+import logo from '../assests/images/riya_logo_2.webp';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
