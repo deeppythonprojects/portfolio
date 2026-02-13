@@ -1,35 +1,35 @@
 // Project 1 - BLOOM Healthcare Facility
-import p1_00 from '../assests/projects_images/1_00.png';
-import p1_therapy from '../assests/projects_images/1_therapy.png';
-import p1_mediation from '../assests/projects_images/1_mediation.png';
-import p1_layout from '../assests/projects_images/1_layout.png';
-import p1_elevation from '../assests/projects_images/1_elevation.png';
-import p1_mood from '../assests/projects_images/1_mood.png';
+import p1_00 from '../assests/projects_images/1_00.webp';
+import p1_therapy from '../assests/projects_images/1_therapy.webp';
+import p1_mediation from '../assests/projects_images/1_mediation.webp';
+import p1_layout from '../assests/projects_images/1_layout.webp';
+import p1_elevation from '../assests/projects_images/1_elevation.webp';
+import p1_mood from '../assests/projects_images/1_mood.webp';
 
 // Project 2 - Color Core Studio
-import p2_00 from '../assests/projects_images/2_00.png';
-import p2_lounge from '../assests/projects_images/2_lounge.png';
-import p2_hr_office from '../assests/projects_images/2_hr_office.png';
-import p2_layout_floor_1 from '../assests/projects_images/2_layout_floor_1.png';
-import p2_layout_floor_2 from '../assests/projects_images/2_layout_floor_2.png';
-import p2_mood from '../assests/projects_images/2_mood.png';
+import p2_00 from '../assests/projects_images/2_00.webp';
+import p2_lounge from '../assests/projects_images/2_lounge.webp';
+import p2_hr_office from '../assests/projects_images/2_hr_office.webp';
+import p2_layout_floor_1 from '../assests/projects_images/2_layout_floor_1.webp';
+import p2_layout_floor_2 from '../assests/projects_images/2_layout_floor_2.webp';
+import p2_mood from '../assests/projects_images/2_mood.webp';
 
 // Project 3 - Casa Loma
-import p3_00 from '../assests/projects_images/3_00.png';
-import p3_reception from '../assests/projects_images/3_reception.png';
-import p3_cafe from '../assests/projects_images/3_cafe.png';
-import p3_ground from '../assests/projects_images/3_ground.png';
-import p3_floor_2 from '../assests/projects_images/3_floor_2.png';
-import p3_basement from '../assests/projects_images/3_basement.png';
-import p3_mood from '../assests/projects_images/3_mood.png';
+import p3_00 from '../assests/projects_images/3_00.webp';
+import p3_reception from '../assests/projects_images/3_reception.webp';
+import p3_cafe from '../assests/projects_images/3_cafe.webp';
+import p3_ground from '../assests/projects_images/3_ground.webp';
+import p3_floor_2 from '../assests/projects_images/3_floor_2.webp';
+import p3_basement from '../assests/projects_images/3_basement.webp';
+import p3_mood from '../assests/projects_images/3_mood.webp';
 
 // Project 4 - FLOAT Sanctuary
-import p4_00 from '../assests/projects_images/4_00.png';
-import p4_livin from '../assests/projects_images/4_livin.png';
-import p4_layout from '../assests/projects_images/4_layout.png';
-import p4_north_elevation from '../assests/projects_images/4_north_elevation.png';
-import p4_south_elevation from '../assests/projects_images/4_south_elevation.png';
-import p4_assembly from '../assests/projects_images/4_assembly.png';
+import p4_00 from '../assests/projects_images/4_00.webp';
+import p4_livin from '../assests/projects_images/4_livin.webp';
+import p4_layout from '../assests/projects_images/4_layout.webp';
+import p4_north_elevation from '../assests/projects_images/4_north_elevation.webp';
+import p4_south_elevation from '../assests/projects_images/4_south_elevation.webp';
+import p4_assembly from '../assests/projects_images/4_assembly.webp';
 
 export const projectsData = [
   {
