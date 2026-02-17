@@ -42,7 +42,7 @@ const Hero = () => {
         >
           <img
             src="https://images.unsplash.com/photo-1581784878214-8d5596b98a01?w=1920&q=80"
-            alt="Luxury Interior"
+            alt="Luxury modern interior design by Riya Rathod"
             className="w-full h-full object-cover"
           />
           {/* Gradient Overlay */}
@@ -61,6 +61,10 @@ const Hero = () => {
       <div ref={textRef} className="relative z-10 h-full flex flex-col items-center justify-center px-6 text-center">
         <div className="max-w-5xl">
           {/* Animated Title */}
+          <h1 className="sr-only">
+            Interior Designer Portfolio – Riya Rathod
+          </h1>
+
                 <h1 className="font-['Playfair_Display'] text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight">
                 {['Crafting', 'Spaces', 'That', 'Inspire'].map((word, index) => (
                   <span
@@ -87,7 +91,7 @@ const Hero = () => {
             Interior Design Portfolio
           </p>
           <div className="mb-12 opacity-0 animate-fade-in" style={{ animationDelay: '1.8s', animationFillMode: 'forwards' }}>
-            <img src={logo} alt="Interior Design" className="w-32 h-32 rounded-lg object-cover mx-auto shadow-lg" />
+            <img src={logo} alt="Riya Rathod Interior Designer Logo" className="w-32 h-32 rounded-lg object-cover mx-auto shadow-lg" />
           </div>
           {/* Decorative Line */}
           <div

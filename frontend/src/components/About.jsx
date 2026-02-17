@@ -77,7 +77,7 @@ const About = () => {
             >
               <img
                 src={portfolio_self_portrait}
-                alt="Self Portfolio"
+                alt="Riya Rathod Portfolio Image Portrait"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -240,7 +240,7 @@ const About = () => {
                     </div>
                   ))}
                 </div>
-                <div className="mt-6 pt-6 border-t border-[#736F6A]/20">
+                {/*<div className="mt-6 pt-6 border-t border-[#736F6A]/20">
                   <a
                     href={resume}
                     download
@@ -248,7 +248,7 @@ const About = () => {
                   >
                     Download Resume
                   </a>
-                </div>
+                </div>*/}
               </div>
             </div>
           </div>

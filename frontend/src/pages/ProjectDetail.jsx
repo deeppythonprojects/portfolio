@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { projectsData } from '../data/projects';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import { Helmet } from "react-helmet-async";
+
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -33,6 +35,10 @@ const ProjectDetail = () => {
   if (!project) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FDFCFC]">
+        <Helmet>
+          <title>{project.title} | Riya Rathod</title>
+          <meta name="description" content={project.description} />
+        </Helmet>
         <div className="text-center">
           <h2 className="font-['Playfair_Display'] text-3xl text-[#281A12] mb-4">
             Project not found

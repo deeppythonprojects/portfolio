@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import ProjectDetail from './pages/ProjectDetail';
 import './App.css';
 
+
 function App() {
   return (
     <div className="App">
